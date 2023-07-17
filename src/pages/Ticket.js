@@ -28,21 +28,80 @@ import {
 import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
 // sections
-import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
+import { UserListHead, UserTicketToolbar } from '../sections/@dashboard/user';
 // mock
-import USERLIST from '../_mock/user';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
+  { id: 'ticketId', label: 'Ticket Id', alignRight: false },
   { id: 'name', label: 'Name', alignRight: false },
   { id: 'email', label: 'Email', alignRight: false },
   { id: 'category', label: 'Category', alignRight: false },
-  { id: 'role', label: 'Role', alignRight: false },
+  { id: 'status', label: 'Status', alignRight: false },
+  { id: 'priority', label: 'Priority', alignRight: false },
+  { id: 'timing', label: 'Timing', alignRight: false },
+  { id: 'created', label: 'Created', alignRight: false },
   { id: 'action', label: 'Action', alignRight: false },
 ];
 
-
+const USERLIST = [
+  {
+    ticketId: '1685530041',
+    name: 'Prakhar',
+    email: 'prakhar@techastute.in',
+    category: 'New Installation',
+    status: 'New Ticket',
+    priority: 'High',
+    timing: '1 month ago',
+    created: '1 hour',
+    responseIn:'1 hour'
+  },
+  {
+    ticketId: '1685530042',
+    name: 'Ankush',
+    email: 'ankush@techastute.in',
+    category: 'Questions',
+    status: 'In Progress',
+    priority: 'Low',
+    timing: '1 month ago',
+    created: '1 hour',
+    responseIn: '1 week after',
+  },
+  {
+    ticketId: '1685530043',
+    name: 'Shivani',
+    email: 'shivani@gmail.com',
+    category: 'Bug',
+    status: 'Closed',
+    priority: 'Urgent',
+    timing: '1 month ago',
+    created: '1 hour',
+    responseIn: '2 week after',
+  },
+  {
+    ticketId: '1685530044',
+    name: 'Rahul',
+    email: 'rahul@gmail.com',
+    category: 'Support',
+    status: 'On Hold',
+    priority: 'Medium',
+    timing: '1 month ago',
+    created: '1 hour',
+    responseIn: ' 1 hour',
+  },
+  {
+    ticketId: '1685530045',
+    name: 'Shanu',
+    email: 'shanu@gmail.com',
+    category: 'New Installation',
+    status: 'Resolved',
+    priority: 'Low',
+    timing: '1 month ago',
+    created: '1 hour',
+    responseIn: ' 1 hour',
+  },
+];
 // ----------------------------------------------------------------------
 
 function descendingComparator(a, b, orderBy) {
@@ -74,7 +133,8 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function UserPage() {
+export default function Ticket() {
+
   const [page, setPage] = useState(0);
 
   const [order, setOrder] = useState('asc');
@@ -106,7 +166,42 @@ export default function UserPage() {
     }
     return ''; // Default color when category name doesn't match
   };
-  
+
+  const getPriority = (priority) => {
+    if (priority === 'High') {
+      return 'red';
+    }
+    if (priority === 'Low') {
+      return '#dbc900';
+    }
+    if (priority === 'Urgent') {
+      return '#000';
+    }
+    if (priority === 'Medium') {
+      return 'green';
+    }
+    return ''; // Default color when category name doesn't match
+  };
+
+  const getStatus = (status) => {
+    if (status === 'In Progress' || status === 'Closed' || status === 'Resolved') {
+      return '#eff6fc';
+    }
+    if (status === 'New Ticket' || status === 'On Hold') {
+      return '#fcf1e5';
+    }
+    return ''; // Default color when category name doesn't match
+  };
+
+  const getStatusTextColor = (status) => {
+    if (status === 'In Progress' || status === 'Closed' || status === 'Resolved') {
+      return 'blue';
+    }
+    if (status === 'New Ticket' || status === 'On Hold') {
+      return '#f8a031';
+    }
+    return ''; // Default color when category name doesn't match
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -161,21 +256,21 @@ export default function UserPage() {
   return (
     <>
       <Helmet>
-        <title> User </title>
+        <title> Ticket </title>
       </Helmet>
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            User
+            Ticket
           </Typography>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+          {/* <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
             New User
-          </Button>
+          </Button> */}
         </Stack>
 
         <Card>
-          <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
+          <UserTicketToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
@@ -191,7 +286,7 @@ export default function UserPage() {
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, role, email, avatarUrl, category } = row;
+                    const { id, name, created, email, timing, category, ticketId, status, priority, responseIn } = row;
                     const selectedUser = selected.indexOf(name) !== -1;
 
                     return (
@@ -200,14 +295,30 @@ export default function UserPage() {
                           <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, name)} />
                         </TableCell>
 
-                        <TableCell component="th" scope="row" padding="none">
-                          <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar alt={name} src={avatarUrl} />
-                            <Typography variant="subtitle2" noWrap>
-                              {name}
-                            </Typography>
-                          </Stack>
+                        <TableCell align="left">
+                          <div
+                            style={{
+                              border: '1px solid #6fd943',
+                              color: '#6fd943',
+                              padding: '6px',
+                              borderRadius: '6px',
+                              transition: 'background-color 0.3s, color 0.3s',
+                              cursor: 'pointer',
+                            }}
+                            onMouseEnter={(e) => {
+                              e.target.style.backgroundColor = '#6fd943';
+                              e.target.style.color = 'white';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.target.style.backgroundColor = 'white';
+                              e.target.style.color = '#6fd943';
+                            }}
+                          >
+                            {ticketId}
+                          </div>
                         </TableCell>
+
+                        <TableCell align="left">{name}</TableCell>
 
                         <TableCell align="left">{email}</TableCell>
 
@@ -218,9 +329,9 @@ export default function UserPage() {
                               margin: '4px',
                               padding: '3px',
                               borderRadius: '6px',
-                              textAlign:'center',
-                              width:'120px',
-                              color:getCategoryTextColor(category)
+                              textAlign: 'center',
+                              width: '120px',
+                              color: getCategoryTextColor(category),
                             }}
                           >
                             {category}
@@ -229,22 +340,58 @@ export default function UserPage() {
                         <TableCell align="left">
                           <div
                             style={{
-                              backgroundColor: '#6fd943',
+                              backgroundColor: getStatus(status),
+                              margin: '4px',
+                              padding: '3px',
+                              borderRadius: '6px',
+                              color: getStatusTextColor(status),
+                              textAlign: 'center',
+                              width: '100px',
+                            }}
+                          >
+                            {status}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          {' '}
+                          <div
+                            style={{
+                              backgroundColor: getPriority(priority),
                               margin: '4px',
                               padding: '3px',
                               borderRadius: '6px',
                               color: '#fff',
                               textAlign: 'center',
+                              width: '100px',
                             }}
                           >
-                            {role}
+                            {priority}
                           </div>
+                        </TableCell>
+                        <TableCell>
+                          <div style={{ width: '100px' }}>{timing}</div>
+                        </TableCell>
+                        <TableCell>
+                          <>
+                            <div
+                              style={{
+                                width: '250px',
+                                color: responseIn && responseIn.trim() === '1 hour' ? 'black' : 'red',
+                              }}
+                            >
+                              {responseIn && responseIn.trim() === '1 hour' ? 'Response In' : 'Response Overdue'}:{' '}
+                              {responseIn}
+                            </div>
+                            <div style={{ width: '150px' }}>Resolve In: {created}</div>
+                          </>
                         </TableCell>
 
                         <TableCell align="left">
-                          <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
+                          <div style={{ display: 'flex' }}>
+                            <Iconify icon={'ri:reply-line'} sx={{ mr: 2 }} />
 
-                          <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2, color: 'red' }} />
+                            <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2, color: 'red' }} />
+                          </div>
                         </TableCell>
                       </TableRow>
                     );
