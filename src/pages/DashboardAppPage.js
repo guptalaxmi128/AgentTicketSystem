@@ -37,9 +37,9 @@ export default function DashboardAppPage() {
         </Typography>
 
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={6} md={3}>
+          {/* <Grid item xs={12} sm={6} md={3}>
             <AppWidgetSummary title="Total Categories" total={4} icon={'ant-design:android-filled'} />
-          </Grid>
+          </Grid> */}
 
           <Grid item xs={12} sm={6} md={3}>
             <AppWidgetSummary title="Open Tickets" total={14} color="info" icon={'ant-design:apple-filled'} />
@@ -49,9 +49,9 @@ export default function DashboardAppPage() {
             <AppWidgetSummary title="Closed Tickets" total={2} color="warning" icon={'ant-design:windows-filled'} />
           </Grid>
 
-          <Grid item xs={12} sm={6} md={3}>
+          {/* <Grid item xs={12} sm={6} md={3}>
             <AppWidgetSummary title="Total Agents" total={8} color="error" icon={'ant-design:bug-filled'} />
-          </Grid>
+          </Grid> */}
 
           {/* <Grid item xs={12} md={6} lg={8}>
             <AppWebsiteVisits

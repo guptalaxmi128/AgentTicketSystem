@@ -22,6 +22,7 @@ import {
   TableContainer,
   TablePagination,
 } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 // components
 
@@ -55,7 +56,7 @@ const USERLIST = [
     priority: 'High',
     timing: '1 month ago',
     created: '1 hour',
-    responseIn:'1 hour'
+    responseIn: '1 hour',
   },
   {
     ticketId: '1685530042',
@@ -134,7 +135,6 @@ function applySortFilter(array, comparator, query) {
 }
 
 export default function Ticket() {
-
   const [page, setPage] = useState(0);
 
   const [order, setOrder] = useState('asc');
@@ -264,9 +264,11 @@ export default function Ticket() {
           <Typography variant="h4" gutterBottom>
             Ticket
           </Typography>
-          {/* <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New User
-          </Button> */}
+          <Link to={'/dashboard/create-ticket'} sx={{ textDecoration: 'none' }}>
+            <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+              New Ticket
+            </Button>
+          </Link>
         </Stack>
 
         <Card>
@@ -296,26 +298,28 @@ export default function Ticket() {
                         </TableCell>
 
                         <TableCell align="left">
-                          <div
-                            style={{
-                              border: '1px solid #6fd943',
-                              color: '#6fd943',
-                              padding: '6px',
-                              borderRadius: '6px',
-                              transition: 'background-color 0.3s, color 0.3s',
-                              cursor: 'pointer',
-                            }}
-                            onMouseEnter={(e) => {
-                              e.target.style.backgroundColor = '#6fd943';
-                              e.target.style.color = 'white';
-                            }}
-                            onMouseLeave={(e) => {
-                              e.target.style.backgroundColor = 'white';
-                              e.target.style.color = '#6fd943';
-                            }}
-                          >
-                            {ticketId}
-                          </div>
+                          <Link to={'/dashboard/update-ticket'} style={{ textDecoration: 'none' }}>
+                            <div
+                              style={{
+                                border: '1px solid #6fd943',
+                                color: '#6fd943',
+                                padding: '6px',
+                                borderRadius: '6px',
+                                transition: 'background-color 0.3s, color 0.3s',
+                                cursor: 'pointer',
+                              }}
+                              onMouseEnter={(e) => {
+                                e.target.style.backgroundColor = '#6fd943';
+                                e.target.style.color = 'white';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.target.style.backgroundColor = 'white';
+                                e.target.style.color = '#6fd943';
+                              }}
+                            >
+                              {ticketId}
+                            </div>
+                          </Link>
                         </TableCell>
 
                         <TableCell align="left">{name}</TableCell>
@@ -390,7 +394,7 @@ export default function Ticket() {
                           <div style={{ display: 'flex' }}>
                             <Iconify icon={'ri:reply-line'} sx={{ mr: 2 }} />
 
-                            <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2, color: 'red' }} />
+                            {/* <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2, color: 'red' }} /> */}
                           </div>
                         </TableCell>
                       </TableRow>
